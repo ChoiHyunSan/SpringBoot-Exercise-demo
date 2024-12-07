@@ -1,29 +1,34 @@
 package SpringBoot_Exercise.demo.controller;
 
 import SpringBoot_Exercise.demo.domain.Question;
-import SpringBoot_Exercise.demo.domain.dto.QuestionCreateDto;
-import SpringBoot_Exercise.demo.repository.QuestionRepository;
+import SpringBoot_Exercise.demo.domain.dto.QuestionDto;
+import SpringBoot_Exercise.demo.exception.DataNotFoundException;
+import SpringBoot_Exercise.demo.service.QuestionService;
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static SpringBoot_Exercise.demo.domain.Question.createQuestion;
 
+@lombok.extern.slf4j.Slf4j
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/question")
 public class QuestionController {
 
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @GetMapping("/list")
     public String list(Model model) {
-        List<Question> questionList = questionRepository.findAll();
+        List<Question> questionList = questionService.getList();
         model.addAttribute("questionList", questionList);
         return "question_list";
     }
@@ -35,13 +40,22 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestBody QuestionCreateDto dto) {
-        Question question = createQuestion(
-                dto.getSubject(),
-                dto.getContent(),
-                LocalDateTime.now()
-        );
-        questionRepository.save(question);
-        return "redirect:/question/list";
+    public String create(@RequestBody  QuestionDto dto) {
+        questionService.registerQuestion(dto);
+        return "redirect:/question/list"; // 성공 시 리다이렉트할 URL 반환
+    }
+
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") Integer id, Model model) {
+        Question question = questionService.getQuestion(id);
+        model.addAttribute("question", question);
+        return "question_detail";
+    }
+
+    @GetMapping("/answer/create/{id}")
+    public String answer(@PathVariable("id") Integer id, Model model) {
+        Question question = questionService.getQuestion(id);
+        model.addAttribute("question", question);
+        return "question_answer";
     }
 }

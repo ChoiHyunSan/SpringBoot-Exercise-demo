@@ -31,4 +31,10 @@ public class Answer {
         this.createDate = time;
         this.question = question;
     }
+
+    public static Answer createAnswer(String content, LocalDateTime time, Question question) {
+        Answer answer = new Answer(content, time, question);
+        question.getAnswerList().add(answer);
+        return answer;
+    }
 }

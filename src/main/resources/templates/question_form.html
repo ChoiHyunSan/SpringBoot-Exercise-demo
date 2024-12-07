@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>질문 등록</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="container my-5">
+    <a th:href="@{/question/list}" class="btn btn-secondary mb-3">목록으로 돌아가기</a>
+
     <h2 class="mb-4">질문 등록</h2>
 
-    <form id="questionForm">
+    <form id="questionForm">  <!-- th:action과 method 제거 -->
         <div class="mb-3">
             <label for="subject" class="form-label">제목</label>
-            <input type="text" id="subject" class="form-control" required>
+            <input type="text" id="subject" name="subject" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <textarea id="content" class="form-control" rows="10" required></textarea>
+            <textarea id="content" name="content" class="form-control" rows="10" required></textarea>
         </div>
 
         <div class="d-flex justify-content-between">
@@ -28,8 +30,8 @@
 </div>
 
 <script>
-    document.getElementById('questionForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    document.getElementById('questionForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
         const data = {
             subject: document.getElementById('subject').value,
@@ -39,23 +41,21 @@
         fetch('/question/create', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
             .then(response => {
-                if(response.ok) {
-                    window.location.href = '/question/list';  // 목록 페이지로 리다이렉트
-                } else {
-                    throw new Error('등록에 실패했습니다.');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+                window.location.href = '/question/list';  // 성공 시 리스트 페이지로 리다이렉트
             })
             .catch(error => {
-                alert(error.message);
+                console.error('Error:', error);
+                alert('질문 등록에 실패했습니다.');
             });
     });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
