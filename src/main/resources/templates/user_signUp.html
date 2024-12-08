@@ -13,14 +13,20 @@
             <h2 class="mb-4">회원가입</h2>
 
             <form th:action="@{/user/signUp}" th:object="${user}" method="post">
+                <!-- 글로벌 에러 메시지 -->
+                <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}" role="alert">
+                    <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                </div>
+
                 <div class="mb-3">
                     <label for="name" class="form-label">이름</label>
                     <input type="text"
                            id="name"
                            th:field="*{name}"
                            class="form-control"
-                           th:classappend="${#fields.hasErrors('name')} ? 'error-input' : ''"
-                           th:placeholder="${#fields.hasErrors('name')} ? ${#fields.errors('name')[0]} : '닉네임을 작성해주세요'">
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                           placeholder="닉네임을 작성해주세요">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                 </div>
 
                 <div class="mb-3">
@@ -29,8 +35,9 @@
                            id="email"
                            th:field="*{email}"
                            class="form-control"
-                           th:classappend="${#fields.hasErrors('email')} ? 'error-input' : ''"
-                           th:placeholder="${#fields.hasErrors('email')} ? ${#fields.errors('email')[0]} : '이메일을 작성해주세요'">
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                           placeholder="이메일을 작성해주세요">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                 </div>
 
                 <div class="mb-3">
@@ -39,8 +46,9 @@
                            id="password"
                            th:field="*{password}"
                            class="form-control"
-                           th:classappend="${#fields.hasErrors('password')} ? 'error-input' : ''"
-                           th:placeholder="${#fields.hasErrors('password')} ? ${#fields.errors('password')[0]} : '비밀번호를 작성해주세요'">
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                           placeholder="비밀번호를 작성해주세요">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                 </div>
 
                 <div class="d-grid gap-2">
