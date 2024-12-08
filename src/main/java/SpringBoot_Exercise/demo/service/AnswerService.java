@@ -3,7 +3,6 @@ package SpringBoot_Exercise.demo.service;
 import SpringBoot_Exercise.demo.domain.Answer;
 import SpringBoot_Exercise.demo.domain.Question;
 import SpringBoot_Exercise.demo.domain.dto.AnswerDto;
-import SpringBoot_Exercise.demo.exception.DataNotFoundException;
 import SpringBoot_Exercise.demo.repository.AnswerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +18,10 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionService questionService;
 
-    public Answer registerAnswer(Integer questionId, AnswerDto answerDto) {
+    public Answer registerAnswer(Integer questionId, String content) {
         Question question = questionService.getQuestion(questionId);
         Answer answer = Answer.createAnswer(
-                answerDto.getContent(),
+                content,
                 LocalDateTime.now(),
                 question
         );

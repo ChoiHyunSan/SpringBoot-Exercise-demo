@@ -11,15 +11,25 @@
 
     <h2 class="mb-4">질문 등록</h2>
 
-    <form id="questionForm">  <!-- th:action과 method 제거 -->
+    <form th:action="@{/question/create}" method="post" th:object="${question}">
         <div class="mb-3">
             <label for="subject" class="form-label">제목</label>
-            <input type="text" id="subject" name="subject" class="form-control" required>
+            <input type="text"
+                   id="subject"
+                   th:field="*{subject}"
+                   class="form-control"
+                   th:classappend="${#fields.hasErrors('subject')} ? 'error-input' : ''"
+                   th:placeholder="${#fields.hasErrors('subject')} ? ${#fields.errors('subject')[0]} : '제목을 입력하세요'">
         </div>
 
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
-            <textarea id="content" name="content" class="form-control" rows="10" required></textarea>
+            <textarea id="content"
+                      th:field="*{content}"
+                      class="form-control"
+                      rows="10"
+                      th:classappend="${#fields.hasErrors('content')} ? 'error-input' : ''"
+                      th:placeholder="${#fields.hasErrors('content')} ? ${#fields.errors('content')[0]} : '내용을 입력하세요'"></textarea>
         </div>
 
         <div class="d-flex justify-content-between">
@@ -28,34 +38,5 @@
         </div>
     </form>
 </div>
-
-<script>
-    document.getElementById('questionForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const data = {
-            subject: document.getElementById('subject').value,
-            content: document.getElementById('content').value
-        };
-
-        fetch('/question/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                window.location.href = '/question/list';  // 성공 시 리스트 페이지로 리다이렉트
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('질문 등록에 실패했습니다.');
-            });
-    });
-</script>
 </body>
 </html>

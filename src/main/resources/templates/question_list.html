@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Question List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="container my-5">
     <h2 class="mb-4">Q&A Board</h2>
-
+    <a th:href="@{/user/login}" class="btn btn-secondary mb-3 justify-content:flex-end">로그인</a>
     <table class="table table-hover">
         <thead class="table-light">
         <tr>
@@ -18,8 +19,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="question, loop : ${questionList}">
-            <td th:text="${loop.count}"></td>
+        <tr th:each="question, loop : ${paging}">
+            <td th:text="${(paging.number * paging.size) + loop.index + 1}"></td>
             <td>
                 <a th:href="@{|/question/detail/${question.id}|}"
                    th:text="${question.subject}"
@@ -27,18 +28,42 @@
                 <span class="badge bg-light"
                       th:if="${!question.answerList.isEmpty()}"
                       th:text="${question.answerList.size()}">
-                </span>
+        </span>
             </td>
             <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
     </table>
 
-    <div class="alert" th:if="${#lists.isEmpty(questionList)}">
-        등록된 질문이 없습니다.
-    </div>
+    <!-- 페이징 처리 -->
+    <nav aria-label="Page navigation" th:if="${paging != null && !paging.isEmpty()}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- 이전 버튼 -->
+            <li class="page-item" th:classappend="${paging.number <= 0} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number - 1}|}">
+                    <span>&laquo;</span>
+                </a>
+            </li>
 
-    <div class="d-flex justify-content-end">
+            <!-- 페이지 번호 -->
+            <li th:if="${paging.totalPages > 0}" class="page-item"
+                th:each="pageNum : ${#numbers.sequence(
+                (paging.number/5)*5,
+                ((paging.number/5)*5 + 4 < paging.totalPages - 1) ? (paging.number/5)*5 + 4 : paging.totalPages-1)}"
+                th:classappend="${pageNum == paging.number} ? 'active'">
+                <a class="page-link" th:href="@{|?page=${pageNum}|}" th:text="${pageNum + 1}"></a>
+            </li>
+
+            <!-- 다음 버튼 -->
+            <li class="page-item" th:classappend="${paging.number >= paging.totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number + 1}|}">
+                    <span>&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="d-flex justify-content-end mt-4">
         <a th:href="@{/question/create}" class="btn btn-primary">질문 등록</a>
     </div>
 </div>

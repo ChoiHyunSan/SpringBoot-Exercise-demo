@@ -11,6 +11,7 @@
 
     <h2 class="mb-4">답변 등록</h2>
 
+
     <!-- 질문 내용 표시 -->
     <div class="question-title">
         <h3 th:text="${question.subject}"></h3>
@@ -22,10 +23,17 @@
     </div>
 
     <!-- 답변 폼 -->
-    <form id="answerForm" class="answer-form">
+    <form th:action="@{'/answer/create/' + ${question.id}}" method="post" th:object="${answer}">
         <h3>답변 작성</h3>
-        <textarea id="content" name="content" class="answer-content"
-                  placeholder="답변을 작성해주세요" required></textarea>
+        <div class="mb-3">
+            <textarea id="content"
+                      th:field="*{content}"
+                      class="form-control"
+                      rows="10"
+                      th:classappend="${#fields.hasErrors('content')} ? 'error-input' : ''"
+                      th:placeholder="${#fields.hasErrors('content')} ? ${#fields.errors('content')[0]} : '답변을 작성해주세요'">
+            </textarea>
+        </div>
 
         <div class="d-flex justify-content-between">
             <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
@@ -33,35 +41,5 @@
         </div>
     </form>
 </div>
-
-<script th:inline="javascript">
-    const questionId = [[${question.id}]];
-
-    document.getElementById('answerForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const data = {
-            content: document.getElementById('content').value
-        };
-
-        fetch(`/answer/create/${questionId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                window.location.href = `/question/detail/${questionId}`;  // 답변 등록 후 질문 상세페이지로 이동
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('답변 등록에 실패했습니다.');
-            });
-    });
-</script>
 </body>
 </html>
