@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class QuestionDto {
+public class QuestionForm {
 
     @NotEmpty(message="제목은 필수입니다.")
     @Size(max=200)
@@ -18,7 +18,7 @@ public class QuestionDto {
     @NotEmpty(message="내용은 필수입니다.")
     private String content;
 
-    public QuestionDto(Question question) {
+    public QuestionForm(Question question) {
         this.subject = question.getSubject();
         this.content = question.getContent();
     }

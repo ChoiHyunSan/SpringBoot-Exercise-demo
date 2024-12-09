@@ -14,7 +14,10 @@
     <!-- 질문 섹션 -->
     <div class="question-title">
         <h3 th:text="${question.subject}"></h3>
-        <div class="question-meta" th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+        <div class="question-meta">
+            작성일: <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+            작성자: <span th:text="${question.authorName}"></span>
+        </div>
     </div>
 
     <div class="question-content mb-5">
@@ -34,6 +37,7 @@
                     <div class="answer-content" th:text="${answer.content}"></div>
                     <div class="answer-meta text-muted mt-2 small">
                         작성일: <span th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        작성자: <span th:text="${answer.getAuthorName()}"></span>
                     </div>
                 </div>
             </div>

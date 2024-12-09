@@ -17,23 +17,26 @@ public class Answer {
     private String content;
     private LocalDateTime createDate;
 
+    private Long authorId;
+
     @ManyToOne
     private Question question;
 
-    public static Answer CreateAnswer(String content, LocalDateTime time, Question question) {
-        return new Answer(content, time, question);
+    public static Answer CreateAnswer(String content, LocalDateTime time, Question question, Long authorId) {
+        return new Answer(content, time, question, authorId);
     }
 
     protected Answer() {}
 
-    public Answer(String content, LocalDateTime time, Question question) {
+    public Answer(String content, LocalDateTime time, Question question, Long authorId) {
         this.content = content;
         this.createDate = time;
         this.question = question;
+        this.authorId = authorId;
     }
 
-    public static Answer createAnswer(String content, LocalDateTime time, Question question) {
-        Answer answer = new Answer(content, time, question);
+    public static Answer createAnswer(String content, LocalDateTime time, Question question, Long authorId) {
+        Answer answer = new Answer(content, time, question, authorId);
         question.getAnswerList().add(answer);
         return answer;
     }

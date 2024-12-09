@@ -1,14 +1,21 @@
 package SpringBoot_Exercise.demo;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -24,13 +31,13 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/user/signUp")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/question/list")).permitAll()  // 추가
-                                .requestMatchers(new AntPathRequestMatcher("/question/detail/**")).permitAll()  // 추가// 질문 작성, 수정, 삭제 등은 인증 필요
+                                .requestMatchers(new AntPathRequestMatcher("/question/list")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/question/detail/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/question/create")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/question/modify/**")).authenticated()
-                                .requestMatchers(new AntPathRequestMatcher("/question/delete/**")).authenticated() // 답변 관련 작업은 인증 필요
+                                .requestMatchers(new AntPathRequestMatcher("/question/delete/**")).authenticated()
                                 .requestMatchers(new AntPathRequestMatcher("/answer/**")).authenticated()
-                                .anyRequest().permitAll()  // 기본적으로 모든 요청 허용으로 변경
+                                .anyRequest().permitAll()
                 )
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
@@ -59,7 +66,6 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

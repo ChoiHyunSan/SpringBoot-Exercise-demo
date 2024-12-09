@@ -18,7 +18,7 @@ public class Question {
     private String subject;
     @Column(columnDefinition = "TEXT")
     private String content;
-
+    private Long authorId;
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
@@ -26,14 +26,15 @@ public class Question {
 
     protected Question() {}
 
-    private Question(String subject, String content, LocalDateTime createDate){
+    private Question(String subject, String content, LocalDateTime createDate, Long authorId){
         this.subject = subject;
         this.content = content;
         this.createDate = createDate;
+        this.authorId = authorId;
     }
 
-    public static Question createQuestion(String subject, String content, LocalDateTime createDate) {
-        return new Question(subject, content, createDate);
+    public static Question createQuestion(String subject, String content, LocalDateTime createDate,  Long authorId) {
+        return new Question(subject, content, createDate, authorId);
     }
 
     public void modifyQuestion(String subject, String content, LocalDateTime now) {

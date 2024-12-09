@@ -8,11 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AnswerDto {
+public class AnswerForm {
     @NotEmpty(message="내용은 필수입니다.")
     private String content;
-
-    AnswerDto(String content) {
+    AnswerForm(String content) {
         this.content = content;
     }
 }

@@ -1,7 +1,6 @@
 package SpringBoot_Exercise.demo.service;
 
 import SpringBoot_Exercise.demo.domain.Question;
-import SpringBoot_Exercise.demo.domain.dto.QuestionDto;
 import SpringBoot_Exercise.demo.exception.DataNotFoundException;
 import SpringBoot_Exercise.demo.repository.QuestionRepository;
 import jakarta.transaction.Transactional;
@@ -27,11 +26,12 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    public Question registerQuestion(String subject, String content) {
+    public Question registerQuestion(String subject, String content, Long authorId) {
         Question question = createQuestion(
                 subject,
                 content,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                authorId
         );
         return questionRepository.save(question);
     }
