@@ -1,8 +1,11 @@
 package SpringBoot_Exercise.demo.repository;
 
-import SpringBoot_Exercise.demo.domain.User;
+import SpringBoot_Exercise.demo.domain.SiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<SiteUser, Long> {
+    Optional<SiteUser> findByEmail(String email);
+    Optional<SiteUser> findByName(String username);
 }

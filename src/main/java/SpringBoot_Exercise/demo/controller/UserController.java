@@ -30,20 +30,6 @@ public class UserController {
         return "user_login";
     }
 
-    @PostMapping("login")
-    public String login(@Valid @ModelAttribute("loginForm") LoginForm loginForm,
-                        BindingResult bindingResult,
-                        Model model) {
-        if(bindingResult.hasErrors() || !userService.login(loginForm)) {
-            model.addAttribute("loginError", true);
-            model.addAttribute("loginForm", loginForm);
-            return "user_login";
-        }
-        // 만약 로그인에 성공했다면 세션을 만들어야 하지 않을까?
-
-        return "redirect:/question/list";
-    }
-
     @GetMapping("/signUp")
     public String signUp(Model model){
         model.addAttribute("user", new UserDto());

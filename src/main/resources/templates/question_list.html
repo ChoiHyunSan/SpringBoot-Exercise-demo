@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Question List</title>
@@ -8,8 +8,29 @@
 </head>
 <body>
 <div class="container my-5">
-    <h2 class="mb-4">Q&A Board</h2>
-    <a th:href="@{/user/login}" class="btn btn-secondary mb-3 justify-content:flex-end">로그인</a>
+    <!-- 네비게이션 바 추가 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Q&A Board</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <!-- 로그인하지 않은 경우 -->
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" th:href="@{/user/login}">로그인</a>
+                    </li>
+                    <!-- 로그인한 경우 -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <span class="nav-link">
+                        <span th:text="|이메일: ${#authentication.principal.username}, 닉네임: ${#authentication.principal.name}|"></span>
+                    </span>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/user/logout}">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <table class="table table-hover">
         <thead class="table-light">
         <tr>

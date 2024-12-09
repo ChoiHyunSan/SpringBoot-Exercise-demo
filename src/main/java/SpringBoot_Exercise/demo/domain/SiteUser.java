@@ -1,12 +1,11 @@
 package SpringBoot_Exercise.demo.domain;
 
 import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 import lombok.Getter;
 
 @Getter
 @Entity
-public class User {
+public class SiteUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,10 +17,10 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    protected User() {
+    protected SiteUser() {
     }
 
-    public User(String name, String password, String email) {
+    public SiteUser(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;
